@@ -4,23 +4,12 @@
  * делаем через рекурсию(а других вариантов и нет)
  */
 export const deepEqual = (obj, anotherObject) => {
-  let props1 = Object.getOwnPropertyNames(obj);
-  let props2 = Object.getOwnPropertyNames(anotherObject);
-  if (props1.length !== props2.length) {
-    return false;
-  }
-  for (let i = 0; i < props1.length; i++) {
-    let prop = props1[i];
-    let bothAreObjects =
-      typeof obj[prop] === 'object' && typeof anotherObject[prop] === 'object';
-    if (
-      (!bothAreObjects && obj[prop] !== anotherObject[prop]) ||
-      (bothAreObjects && !deepEqual(obj[prop], anotherObject[prop]))
-    ) {
-      return false;
+  return Object.entries(obj).every(([key, value]) => {
+    if (typeof value === 'object') {
+      return deepEqual(value, anotherObject[key]);
     }
-  }
-  return true;
+    return value === anotherObject[key];
+  });
 };
 
 /**
