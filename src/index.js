@@ -4,21 +4,23 @@
  * делаем через рекурсию(а других вариантов и нет)
  */
 export const deepEqual = (obj, anotherObject) => {
-  if (typeof obj === 'object' && typeof anotherObject === 'object') {
-    for (let [key, value] of Object.entries(obj)) {
-      for (let [key2, value2] of Object.entries(anotherObject)) {
-        if (typeof value === 'object' || typeof value2 === 'object') {
-          return deepEqual([key, value], [key2, value2]);
-        } else if (key === key2 && value === value2) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
-  } else {
-    return obj === anotherObject;
+  let props1 = Object.getOwnPropertyNames(obj);
+  let props2 = Object.getOwnPropertyNames(anotherObject);
+  if (props1.length !== props2.length) {
+    return false;
   }
+  for (let i = 0; i < props1.length; i++) {
+    let prop = props1[i];
+    let bothAreObjects =
+      typeof obj[prop] === 'object' && typeof anotherObject[prop] === 'object';
+    if (
+      (!bothAreObjects && obj[prop] !== anotherObject[prop]) ||
+      (bothAreObjects && !deepEqual(obj[prop], anotherObject[prop]))
+    ) {
+      return false;
+    }
+  }
+  return true;
 };
 
 /**
@@ -37,8 +39,8 @@ export const deepCopy = (obj) => {
     });
   } else if (typeof obj === 'object') {
     let result = {};
-    for (let x in obj) {
-      result[x] = deepCopy(obj[x]);
+    for (let [key, value] of Object.entries(obj)) {
+      result[key] = deepCopy(obj[key]);
     }
     return result;
   }
