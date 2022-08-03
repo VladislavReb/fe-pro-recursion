@@ -40,13 +40,13 @@ export const deepCopy = (obj) => {
  * То есть если у нас объект { name: { bohdan: { name: 'test' } } } вернет ['name', 'bohdan']
  */
 export const getAllObjectKeys = (obj) => {
-  return Object.entries(obj).reduce((accum, item) => {
+  return Object.entries(obj).reduce((accum, [key, value]) => {
     let result = '';
-    if (typeof item[1] === 'object') {
-      result = [...accum, item[0], ...getAllObjectKeys(item[1])];
+    if (typeof value === 'object') {
+      result = [...accum, key, ...getAllObjectKeys(value)];
       return [...new Set(result)];
     } else {
-      result = [...accum, item[0]];
+      result = [...accum, key];
       return [...new Set(result)];
     }
   }, []);
