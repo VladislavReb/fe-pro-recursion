@@ -27,11 +27,11 @@ export const deepCopy = (obj) => {
       return deepCopy(value);
     });
   } else if (typeof obj === 'object') {
-    let result = {};
-    for (let [key, value] of Object.entries(obj)) {
-      result[key] = deepCopy(obj[key]);
-    }
-    return result;
+    let objCopy = Object.assign({}, obj);
+    Object.keys(objCopy).forEach(key => {
+      objCopy[key] = deepCopy(objCopy[key]);
+    });
+    return objCopy;
   }
 };
 
